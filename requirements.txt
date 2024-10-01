@@ -2309,3 +2309,4 @@ xformers==0.0.22.post7 ; python_version >= "3.10" and python_version < "4.0" \
     --hash=sha256:5fcb0eb6eb0a6b78f6f866ea90ffbef955f8c903afd1e2fd934c1619eabb042e \
     --hash=sha256:7d237ce3d1b4de68cff3e939991a05f83b5c3213471e9bc2fc986c92beb2184a \
     --hash=sha256:fd3c88b4aa4cd5b6aa1ee162c42c649a6dd0555fd54eaed0d1158fe50f8b1517
+nvidia-cuda-nvrtc-cu12==12.1.105 --hash=sha256:339b385f50c309763ca65456ec75e17bbefcbbf2893f462cb8b90584cd27a1c2
