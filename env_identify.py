@@ -9,6 +9,6 @@ with open("env_identify_output.txt", "a") as file:
     file.write(f"torchaudio version: {torchaudio.__version__}\n")
     # 检查是否安装了 CUDA
     if torch.cuda.is_available():
-        file.write("CUDA is available! PyTorch is using GPU.")
+        file.write("CUDA is available! PyTorch is using GPU.\n")
     else:
-        file.write("CUDA is not available. PyTorch is using CPU.")
+        file.write("CUDA is not available. PyTorch is using CPU.\n")
