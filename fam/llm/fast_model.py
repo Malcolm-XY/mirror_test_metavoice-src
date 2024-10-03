@@ -180,7 +180,7 @@ class TransformerBlock(nn.Module):
         out = h + self.feed_forward(self.ffn_norm(h))
         return out
 
-# xu
+
 import torch._dynamo
 class Attention(nn.Module):
     def __init__(self, config: ModelArgs):
@@ -203,33 +203,35 @@ class Attention(nn.Module):
         x: Tensor,
         mask: Tensor,
         input_pos: Optional[Tensor] = None,
-    ) -> Tensor:      
-        bsz, seqlen, _ = x.shape
+    ) -> Tensor:
+        # 禁用 torch._dynamo 进行调试
+        with torch._dynamo.disable():
+            bsz, seqlen, _ = x.shape
 
-        kv_size = self.n_local_heads * self.head_dim
-        q, k, v = self.wqkv(x).split([self.dim, kv_size, kv_size], dim=-1)
+            kv_size = self.n_local_heads * self.head_dim
+            q, k, v = self.wqkv(x).split([self.dim, kv_size, kv_size], dim=-1)
 
-        q = q.view(bsz, seqlen, self.n_head, self.head_dim)
-        k = k.view(bsz, seqlen, self.n_local_heads, self.head_dim)
-        v = v.view(bsz, seqlen, self.n_local_heads, self.head_dim)
+            # 输出 q, k, v 的类型和形状
+            print(f"q type: {type(q)}, q shape: {q.shape}")
+            print(f"k type: {type(k)}, k shape: {k.shape}")
+            print(f"v type: {type(v)}, v shape: {v.shape}")
 
-        q, k, v = map(lambda x: x.transpose(1, 2), (q, k, v))
+            q = q.view(bsz, seqlen, self.n_head, self.head_dim)
+            k = k.view(bsz, seqlen, self.n_local_heads, self.head_dim)
+            v = v.view(bsz, seqlen, self.n_local_heads, self.head_dim)
 
-        # xu
-        # Disable torch._dynamo temporarily
-        with torch._dynamo.config.patch(suppress_errors=True):
-            print(f"q dtype: {q.dtype}, k dtype: {k.dtype}, v dtype: {v.dtype}")
-        
-        if self.kv_cache is not None:
-            k, v = self.kv_cache.update(input_pos, k, v)
+            q, k, v = map(lambda x: x.transpose(1, 2), (q, k, v))
+            
+            if self.kv_cache is not None:
+                k, v = self.kv_cache.update(input_pos, k, v)
 
-        k = k.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
-        v = v.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
-        y = F.scaled_dot_product_attention(q, k, v, attn_mask=mask, dropout_p=0.0)
+            k = k.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
+            v = v.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
+            y = F.scaled_dot_product_attention(q, k, v, attn_mask=mask, dropout_p=0.0)
 
-        y = y.transpose(1, 2).contiguous().view(bsz, seqlen, self.dim)
+            y = y.transpose(1, 2).contiguous().view(bsz, seqlen, self.dim)
 
-        y = self.wo(y)
+            y = self.wo(y)
         return y
 
 
