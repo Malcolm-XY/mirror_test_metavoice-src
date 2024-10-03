@@ -215,8 +215,9 @@ class Attention(nn.Module):
         q, k, v = map(lambda x: x.transpose(1, 2), (q, k, v))
 
         ### xu
-        print(type(q), type(k), type(v))
-
+        print("##########################Here are types:\n")
+        print(type(q), type(k), type(v),"\n")
+        
         if self.kv_cache is not None:
             k, v = self.kv_cache.update(input_pos, k, v)
 
