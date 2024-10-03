@@ -1,4 +1,4 @@
 import torch;
-from fam.llm.fast_inference import TTS;
+import fam.llm.fast_inference as fast_infer;
 
-#tts = TTS()
+tts = fast_infer.TTS()
