@@ -214,13 +214,19 @@ class Attention(nn.Module):
 
         q, k, v = map(lambda x: x.transpose(1, 2), (q, k, v))
 
+        # Write dtypes of q, k, v to a file
+        with open("qkv_dtypes.txt", "w") as f:
+            f.write(f"q dtype: {q.dtype}\n")
+            f.write(f"k dtype: {k.dtype}\n")
+            f.write(f"v dtype: {v.dtype}\n")
+
         ### 修改部分
         print("##########################")
 
-        # 打印类型和数据类型 (如果是 NumPy 数组或 PyTorch 张量)
-        print(f"q: Type - {type(q)}, Dtype - {q.dtype if hasattr(q, 'dtype') else 'Not available'}")
-        print(f"k: Type - {type(k)}, Dtype - {k.dtype if hasattr(k, 'dtype') else 'Not available'}")
-        print(f"v: Type - {type(v)}, Dtype - {v.dtype if hasattr(v, 'dtype') else 'Not available'}")
+        # Print dtypes of q, k, v
+        print(f"q dtype: {q.dtype}")
+        print(f"k dtype: {k.dtype}")
+        print(f"v dtype: {v.dtype}")
         
         if self.kv_cache is not None:
             k, v = self.kv_cache.update(input_pos, k, v)
