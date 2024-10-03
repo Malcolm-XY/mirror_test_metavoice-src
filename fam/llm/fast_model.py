@@ -215,7 +215,7 @@ class Attention(nn.Module):
         q, k, v = map(lambda x: x.transpose(1, 2), (q, k, v))
 
         ### 修改部分
-        print("##########################Here are types and dtypes:\n")
+        print("##########################")
 
         # 打印类型和数据类型 (如果是 NumPy 数组或 PyTorch 张量)
         print(f"q: Type - {type(q)}, Dtype - {q.dtype if hasattr(q, 'dtype') else 'Not available'}")
