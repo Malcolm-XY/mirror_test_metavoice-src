@@ -214,9 +214,13 @@ class Attention(nn.Module):
 
         q, k, v = map(lambda x: x.transpose(1, 2), (q, k, v))
 
-        ### xu
-        print("##########################Here are types:\n")
-        print(type(q), type(k), type(v),"\n")
+        ### 修改部分
+        print("##########################Here are types and dtypes:\n")
+
+        # 打印类型和数据类型 (如果是 NumPy 数组或 PyTorch 张量)
+        print(f"q: Type - {type(q)}, Dtype - {q.dtype if hasattr(q, 'dtype') else 'Not available'}")
+        print(f"k: Type - {type(k)}, Dtype - {k.dtype if hasattr(k, 'dtype') else 'Not available'}")
+        print(f"v: Type - {type(v)}, Dtype - {v.dtype if hasattr(v, 'dtype') else 'Not available'}")
         
         if self.kv_cache is not None:
             k, v = self.kv_cache.update(input_pos, k, v)
