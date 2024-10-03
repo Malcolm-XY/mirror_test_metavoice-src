@@ -202,9 +202,7 @@ class Attention(nn.Module):
         x: Tensor,
         mask: Tensor,
         input_pos: Optional[Tensor] = None,
-    ) -> Tensor:
-        print("**********Forward**********")
-        
+    ) -> Tensor:      
         bsz, seqlen, _ = x.shape
 
         kv_size = self.n_local_heads * self.head_dim
