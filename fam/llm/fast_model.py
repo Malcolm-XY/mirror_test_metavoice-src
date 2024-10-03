@@ -180,7 +180,8 @@ class TransformerBlock(nn.Module):
         out = h + self.feed_forward(self.ffn_norm(h))
         return out
 
-
+# xu
+import torch._dynamo
 class Attention(nn.Module):
     def __init__(self, config: ModelArgs):
         super().__init__()
@@ -214,8 +215,10 @@ class Attention(nn.Module):
 
         q, k, v = map(lambda x: x.transpose(1, 2), (q, k, v))
 
-        # Use logging or print for dtype checking
-        logging.info(f"q dtype: {q.dtype}, k dtype: {k.dtype}, v dtype: {v.dtype}")
+        # xu
+        # Disable torch._dynamo temporarily
+        with torch._dynamo.config.patch(suppress_errors=True):
+            print(f"q dtype: {q.dtype}, k dtype: {k.dtype}, v dtype: {v.dtype}")
         
         if self.kv_cache is not None:
             k, v = self.kv_cache.update(input_pos, k, v)
