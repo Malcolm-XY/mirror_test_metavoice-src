@@ -214,19 +214,8 @@ class Attention(nn.Module):
 
         q, k, v = map(lambda x: x.transpose(1, 2), (q, k, v))
 
-        # Write dtypes of q, k, v to a file
-        with open("qkv_dtypes.txt", "w") as f:
-            f.write(f"q dtype: {q.dtype}\n")
-            f.write(f"k dtype: {k.dtype}\n")
-            f.write(f"v dtype: {v.dtype}\n")
-
-        ### 修改部分
-        print("##########################")
-
-        # Print dtypes of q, k, v
-        print(f"q dtype: {q.dtype}")
-        print(f"k dtype: {k.dtype}")
-        print(f"v dtype: {v.dtype}")
+        # Use logging or print for dtype checking
+        print(f"q dtype: {q.dtype}, k dtype: {k.dtype}, v dtype: {v.dtype}")
         
         if self.kv_cache is not None:
             k, v = self.kv_cache.update(input_pos, k, v)
