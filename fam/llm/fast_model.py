@@ -203,6 +203,8 @@ class Attention(nn.Module):
         mask: Tensor,
         input_pos: Optional[Tensor] = None,
     ) -> Tensor:
+        print("**********Forward**********")
+        
         bsz, seqlen, _ = x.shape
 
         kv_size = self.n_local_heads * self.head_dim
@@ -215,7 +217,7 @@ class Attention(nn.Module):
         q, k, v = map(lambda x: x.transpose(1, 2), (q, k, v))
 
         # Use logging or print for dtype checking
-        print(f"q dtype: {q.dtype}, k dtype: {k.dtype}, v dtype: {v.dtype}")
+        logging.info(f"q dtype: {q.dtype}, k dtype: {k.dtype}, v dtype: {v.dtype}")
         
         if self.kv_cache is not None:
             k, v = self.kv_cache.update(input_pos, k, v)
