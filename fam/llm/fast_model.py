@@ -208,11 +208,6 @@ class Attention(nn.Module):
         kv_size = self.n_local_heads * self.head_dim
         q, k, v = self.wqkv(x).split([self.dim, kv_size, kv_size], dim=-1)
 
-        # xu
-        q = q.to(dtype=x.dtype)
-        k = k.to(dtype=x.dtype)
-        v = v.to(dtype=x.dtype)
-
         q = q.view(bsz, seqlen, self.n_head, self.head_dim)
         k = k.view(bsz, seqlen, self.n_local_heads, self.head_dim)
         v = v.view(bsz, seqlen, self.n_local_heads, self.head_dim)
@@ -221,6 +216,11 @@ class Attention(nn.Module):
         
         if self.kv_cache is not None:
             k, v = self.kv_cache.update(input_pos, k, v)
+
+        # xu
+        q = q.to(dtype=x.dtype)
+        k = k.to(dtype=x.dtype)
+        v = v.to(dtype=x.dtype)
 
         k = k.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
         v = v.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
