@@ -218,9 +218,9 @@ class Attention(nn.Module):
             k, v = self.kv_cache.update(input_pos, k, v)
 
         # xu
-        q = q.to(dtype=x.dtype)
-        k = k.to(dtype=x.dtype)
-        v = v.to(dtype=x.dtype)
+        q = q.to(dtype=torch.float16)
+        k = k.to(dtype=torch.float16)
+        v = v.to(dtype=torch.float16)
 
         k = k.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
         v = v.repeat_interleave(self.n_head // self.n_local_heads, dim=1)
